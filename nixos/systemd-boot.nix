@@ -3,16 +3,29 @@
   boot = {
     bootspec.enable = true;
     loader = {
-      efi.canTouchEfiVariables = true;
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot";  # Ensure this matches your EFI partition mount
+      };
+      # Disable GRUB - CRUCIAL FOR DUAL BOOT
+      grub.enable = false;
+      grub.device = "nodev";  # Prevents GRUB installation
+      
       systemd-boot = {
         enable = true;
         consoleMode = "auto";
         configurationLimit = 8;
+        # Add Windows entry for dual boot
+        extraEntries = {
+          "windows.conf" = ''
+            title Windows Boot Manager
+            efi /EFI/Microsoft/Boot/bootmgfw.efi
+          '';
+        };
       };
     };
     tmp.cleanOnBoot = true;
-    kernelPackages =
-      pkgs.linuxPackages_latest; # _zen, _hardened, _rt, _rt_latest, etc.
+    kernelPackages = pkgs.linuxPackages_latest;
 
     # Silent boot
     kernelParams = [
@@ -25,16 +38,6 @@
     ];
     consoleLogLevel = 0;
     initrd.verbose = false;
-
-    # plymouth = {
-    #   enable = true;
-    #   theme = lib.mkForce "cuts_alt";
-    #   themePackages = with pkgs; [
-    #     (adi1090x-plymouth-themes.override {
-    #       selected_themes = ["cuts_alt"];
-    #     })
-    #   ];
-    # };
   };
 
   # To avoid systemd services hanging on shutdown
