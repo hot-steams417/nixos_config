@@ -9,18 +9,11 @@
       };
       # Disable GRUB - CRUCIAL FOR DUAL BOOT
       grub.enable = false;
-      grub.device = "nodev";  # Prevents GRUB installation
       
       systemd-boot = {
         enable = true;
         consoleMode = "auto";
         configurationLimit = 8;
-        # Add Windows entry for dual boot
-        extraEntries = {
-          "windows.conf" = ''
-            title Windows Boot Manager
-            efi /EFI/Microsoft/Boot/bootmgfw.efi
-          '';
         };
       };
     };
