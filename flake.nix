@@ -49,7 +49,6 @@
               nixpkgs.overlays = [];
               _module.args = {inherit inputs;};
             }
-            inputs.nixos-hardware.nixosModules.system76 # CHANGEME: check https://github.com/NixOS/nixos-hardware
             inputs.home-manager.nixosModules.home-manager
             inputs.stylix.nixosModules.stylix
             ./hosts/nixos/configuration.nix 
